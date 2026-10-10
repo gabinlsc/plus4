@@ -30,6 +30,16 @@ importers:
         specifier: ^4.0.0
         version: 4.1.11(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5))
 
+  packages/bot:
+    dependencies:
+      '@uno/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@uno/engine':
+        specifier: workspace:*
+        version: link:../engine
+
   packages/engine:
     dependencies:
       '@uno/shared':
