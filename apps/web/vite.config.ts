@@ -5,6 +5,10 @@ const serverUrl = process.env.UNO_SERVER_URL ?? 'http://localhost:3001';
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    // Single-screen game app (~165 kB gzipped): one bundle is the right trade-off.
+    chunkSizeWarningLimit: 700,
+  },
   server: {
     port: 5173,
     // Same-origin in development: the client talks to /socket.io, proxied to the game server.
