@@ -1,7 +1,11 @@
+import { resolve } from 'node:path';
+
 export interface ServerConfig {
   readonly port: number;
   /** Allowed browser origins for Socket.IO CORS. */
   readonly corsOrigins: readonly string[];
+  /** Built web client to serve, if any (resolved against the working directory). */
+  readonly staticDir: string | undefined;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
@@ -13,5 +17,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
     .split(',')
     .map((o) => o.trim())
     .filter(Boolean);
-  return { port, corsOrigins };
+  const staticDir = env.STATIC_DIR ? resolve(env.STATIC_DIR) : undefined;
+  return { port, corsOrigins, staticDir };
 }

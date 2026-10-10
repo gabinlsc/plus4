@@ -7,13 +7,17 @@
     "node": ">=22"
   },
   "scripts": {
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm -r typecheck && tsc -p e2e/tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test"
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test",
+    "e2e": "playwright test",
+    "build": "pnpm --filter @uno/web build",
+    "dev": "pnpm --parallel --filter @uno/server --filter @uno/web dev",
+    "start": "STATIC_DIR=apps/web/dist pnpm --filter @uno/server start"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.0",

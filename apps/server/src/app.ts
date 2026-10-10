@@ -3,12 +3,15 @@ import type { AddressInfo } from 'node:net';
 import { Server } from 'socket.io';
 import { RoomManager } from './room/RoomManager';
 import type { RoomTimings } from './room/Room';
+import { createStaticHandler } from './static';
 import { playerChannel, registerHandlers, roomChannel, type UnoServer } from './socket/handlers';
 
 export interface UnoServerOptions {
   readonly corsOrigins: readonly string[];
   readonly random?: () => number;
   readonly timings?: Partial<RoomTimings>;
+  /** Directory of the built web client to serve (production). */
+  readonly staticDir?: string;
 }
 
 export interface UnoServerInstance {
@@ -38,14 +41,26 @@ export function createUnoServer(options: UnoServerOptions): UnoServerInstance {
     ...(options.timings ? { timings: options.timings } : {}),
   });
 
+  const serveStatic = options.staticDir ? createStaticHandler(options.staticDir) : null;
+
   const httpServer = createServer((req, res) => {
     if (req.method === 'GET' && req.url === '/health') {
       res.writeHead(200, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ status: 'ok', rooms: manager.roomCount }));
       return;
     }
-    res.writeHead(404, { 'content-type': 'application/json' });
-    res.end(JSON.stringify({ error: 'not_found' }));
+    const notFound = () => {
+      if (res.headersSent) return;
+      res.writeHead(404, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'not_found' }));
+    };
+    if (!serveStatic) return notFound();
+    serveStatic(req, res).then(
+      (served) => {
+        if (!served) notFound();
+      },
+      () => notFound(),
+    );
   });
 
   const io: UnoServer = new Server(httpServer, {
