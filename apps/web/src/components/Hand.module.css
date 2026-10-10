@@ -1,0 +1,27 @@
+.wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 26px 12px 8px;
+  min-height: calc(var(--card-w) * 1.5 + 40px);
+}
+
+.hand {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.slot {
+  position: relative;
+  transform-origin: 50% 120%;
+}
+
+.slot:first-child {
+  margin-left: 0 !important;
+}
+
+.myTurn {
+  filter: drop-shadow(0 0 18px rgba(124, 140, 255, 0.35));
+}
