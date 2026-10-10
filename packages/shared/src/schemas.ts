@@ -136,3 +136,6 @@ export const joinRoomPayloadSchema = z
   .strict();
 
 export const emoteSchema = z.enum(EMOTES);
+
+/** Validated create-room payload (zod output, optional keys may be `undefined`). */
+export type CreateRoomInput = z.output<typeof createRoomPayloadSchema>;

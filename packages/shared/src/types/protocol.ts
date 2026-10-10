@@ -108,12 +108,15 @@ export interface LobbySeat {
   readonly isHost: boolean;
   readonly connected: boolean;
   readonly ready: boolean;
+  /** A disconnected human whose seat is temporarily played by a bot. */
+  readonly autopilot: boolean;
   readonly botDifficulty?: BotDifficulty;
 }
 
 export interface LobbyState {
   readonly code: string;
   readonly mode: RoomMode;
+  readonly hostId: PlayerId;
   readonly maxPlayers: number;
   readonly seats: readonly LobbySeat[];
   readonly settings: GameSettings;
@@ -137,6 +140,14 @@ export interface SessionInfo {
   readonly playerId: PlayerId;
   /** Opaque token for reconnecting to the same seat after a disconnect. */
   readonly sessionToken: string;
+  readonly code: string;
+}
+
+export interface GameUpdate {
+  readonly view: ClientGameView;
+  readonly events: readonly GameEvent[];
+  /** Epoch ms at which the current turn times out, `null` without a turn timer. */
+  readonly turnDeadline: number | null;
 }
 
 export type AckResult<T> =
@@ -152,13 +163,18 @@ export type LobbyError =
   | 'NOT_HOST'
   | 'INVALID_PAYLOAD'
   | 'NOT_ENOUGH_PLAYERS'
+  | 'NOT_IN_ROOM'
+  | 'INVALID_TARGET'
+  | 'RATE_LIMITED'
   | 'SESSION_EXPIRED';
+
+export type RoomClosedReason = 'kicked' | 'idle' | 'left';
 
 export const EMOTES = ['👏', '😂', '😱', '😡', '🔥', 'GG'] as const;
 export type Emote = (typeof EMOTES)[number];
 
 export interface ClientToServerEvents {
-  'room:create': (payload: CreateRoomPayload, ack: Ack<SessionInfo & { code: string }>) => void;
+  'room:create': (payload: CreateRoomPayload, ack: Ack<SessionInfo>) => void;
   'room:join': (payload: JoinRoomPayload, ack: Ack<SessionInfo>) => void;
   'room:resume': (payload: { sessionToken: string }, ack: Ack<SessionInfo>) => void;
   'room:leave': () => void;
@@ -175,8 +191,8 @@ export interface ClientToServerEvents {
 
 export interface ServerToClientEvents {
   'room:state': (state: LobbyState) => void;
-  'room:closed': (reason: 'host_left' | 'kicked' | 'idle') => void;
+  'room:closed': (reason: RoomClosedReason) => void;
   /** Full authoritative view, sent after each transition alongside the events that produced it. */
-  'game:update': (update: { view: ClientGameView; events: readonly GameEvent[] }) => void;
+  'game:update': (update: GameUpdate) => void;
   'chat:emote': (payload: { playerId: PlayerId; emote: Emote }) => void;
 }
