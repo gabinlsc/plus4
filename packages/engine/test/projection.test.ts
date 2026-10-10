@@ -38,11 +38,12 @@ describe('projectForPlayer', () => {
 
   it('never leaks other hands or the draw pile', () => {
     const { state, secret } = setup();
-    const serialized = JSON.stringify(projectForPlayer(state, 'p0'));
+    const view = projectForPlayer(state, 'p0');
+    const serialized = JSON.stringify(view);
     expect(serialized).not.toContain(secret.id);
     for (const c of state.drawPile) expect(serialized).not.toContain(c.id);
     expect(serialized).not.toContain('rngState');
-    expect(serialized).not.toContain('"hand":[{');
+    expect(view.seats.every((seat) => !('hand' in seat))).toBe(true);
   });
 
   it('lists playable cards for the current player only', () => {
