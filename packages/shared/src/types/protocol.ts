@@ -70,7 +70,7 @@ export type GameEvent =
   | { readonly type: 'GAME_ENDED'; readonly winnerId: PlayerId };
 
 export type DrawReason =
-  'voluntary' | 'penalty_stack' | 'uno_caught' | 'challenge_failed' | 'challenge_bluff' | 'timeout';
+  'voluntary' | 'penalty' | 'uno_caught' | 'challenge_failed' | 'challenge_bluff' | 'timeout';
 
 export type GameEventType = GameEvent['type'];
 

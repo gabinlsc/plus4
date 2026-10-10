@@ -39,8 +39,10 @@ export interface DrawStack {
 export type GamePhase =
   | { readonly type: 'AWAITING_PLAY' }
   | { readonly type: 'AWAITING_PLAY_DRAWN'; readonly drawnCardId: CardId }
+  /** Only at round start, when the flipped card is a wild: the first player declares its color. */
   | { readonly type: 'AWAITING_COLOR'; readonly cardId: CardId }
   | { readonly type: 'AWAITING_SWAP_TARGET' }
+  /** The target of a +4 may challenge it, accept it, or (with stacking) stack on it. */
   | {
       readonly type: 'AWAITING_CHALLENGE';
       readonly accusedId: PlayerId;
@@ -68,6 +70,7 @@ export interface ServerGameState {
   readonly top: DiscardTop;
   readonly drawStack: DrawStack;
   readonly round: number;
+  readonly dealerIndex: number;
   /** Current PRNG state: shuffles are reproducible. */
   readonly rngState: number;
 }

@@ -31,10 +31,14 @@ export interface WildCard {
 
 export type Card = ColoredCard | WildCard;
 
-/** Card on top of the discard pile. For a wild, `activeColor` is the declared color. */
+/**
+ * Card on top of the discard pile. For a wild, `activeColor` is the declared
+ * color. It is `null` only while a wild flipped at round start awaits the
+ * first player's color choice (phase `AWAITING_COLOR`).
+ */
 export interface DiscardTop {
   readonly card: Card;
-  readonly activeColor: CardColor;
+  readonly activeColor: CardColor | null;
 }
 
 export type DrawCardValue = Extract<CardValue, 'draw2' | 'wild_draw4'>;
