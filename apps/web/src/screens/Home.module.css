@@ -1,0 +1,148 @@
+.page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 16px 64px;
+  gap: 28px;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  width: 260px;
+}
+
+.logoCard {
+  position: absolute;
+  --card-w: 84px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  padding: 0 0.12em;
+  background: linear-gradient(180deg, #fff, #c9d0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.main {
+  width: min(760px, 100%);
+  display: grid;
+  gap: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.grow {
+  flex: 1 1 220px;
+}
+
+.modeTabs {
+  justify-self: center;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.section h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.section p {
+  margin: 0 0 16px;
+}
+
+.bots {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+
+.bot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+}
+
+.details {
+  margin: 8px 0 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.details summary {
+  cursor: pointer;
+  padding: 12px 16px;
+  font-weight: 600;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.details summary::after {
+  content: '⌄';
+  color: var(--text-muted);
+}
+
+.details[open] summary::after {
+  content: '⌃';
+}
+
+.detailsBody {
+  padding: 0 16px 16px;
+}
+
+.full {
+  width: 100%;
+}
+
+.codeInput {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}

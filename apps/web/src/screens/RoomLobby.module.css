@@ -1,0 +1,122 @@
+.page {
+  min-height: 100%;
+  padding: 40px 16px 64px;
+  display: flex;
+  justify-content: center;
+}
+
+.layout {
+  width: min(1040px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.code {
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin: 4px 0 0;
+}
+
+.seats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.seat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  min-height: 68px;
+}
+
+.seatEmpty {
+  justify-content: center;
+  border-style: dashed;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.seatInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.seatName {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.seatMeta {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.ready {
+  color: var(--success);
+}
+
+.offline {
+  opacity: 0.55;
+}
+
+.iconButton {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.iconButton:hover {
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.botAdd {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 18px;
+}

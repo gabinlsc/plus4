@@ -1,0 +1,71 @@
+.card {
+  position: relative;
+  width: var(--card-w);
+  aspect-ratio: 2 / 3;
+  border: 0;
+  padding: 0;
+  border-radius: calc(var(--card-w) * 0.11);
+  background: transparent;
+  box-shadow: var(--shadow-card);
+  flex: none;
+  transition:
+    filter 0.2s ease,
+    box-shadow 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card svg {
+  display: block;
+  border-radius: inherit;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.dimmed {
+  filter: brightness(0.55) saturate(0.7);
+}
+
+.playable {
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.85),
+    var(--shadow-card-hover);
+}
+
+.selected {
+  box-shadow:
+    0 0 0 3px var(--accent),
+    0 0 24px rgba(124, 140, 255, 0.6),
+    var(--shadow-card-hover);
+}
+
+.jumpIn {
+  animation: jumpGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes jumpGlow {
+  from {
+    box-shadow:
+      0 0 0 2px #ffd34d,
+      0 0 12px rgba(255, 211, 77, 0.5);
+  }
+  to {
+    box-shadow:
+      0 0 0 3px #ffd34d,
+      0 0 28px rgba(255, 211, 77, 0.95);
+  }
+}
+
+.sm {
+  --card-w: clamp(36px, 4.6vw, 52px);
+}
+
+.lg {
+  --card-w: clamp(84px, 11vw, 124px);
+}
