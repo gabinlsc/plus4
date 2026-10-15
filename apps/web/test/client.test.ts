@@ -21,13 +21,13 @@ describe('game client', () => {
     const { socket, store, client } = setup();
     socket.replies.set('room:create', () => ({
       ok: true,
-      value: { playerId: 'p1', sessionToken: 'tok', code: 'UNO-ABCD' },
+      value: { playerId: 'p1', sessionToken: 'tok', code: 'P4-ABCD' },
     }));
     expect(await client.createRoom({ playerName: 'Gabin', mode: 'online' })).toBe(true);
     expect(store.getState().session).toEqual({
       playerId: 'p1',
       sessionToken: 'tok',
-      code: 'UNO-ABCD',
+      code: 'P4-ABCD',
     });
   });
 
@@ -55,7 +55,7 @@ describe('game client', () => {
   it('resumes a stored session on connect, and forgets it when expired', async () => {
     const socket = new FakeSocket();
     const store = createAppStore();
-    setSession(store, { playerId: 'p1', sessionToken: 'tok', code: 'UNO-ABCD' });
+    setSession(store, { playerId: 'p1', sessionToken: 'tok', code: 'P4-ABCD' });
     socket.replies.set('room:resume', () => ({ ok: false, reason: 'SESSION_EXPIRED' }));
     createGameClient(socket.asSocket(), store);
     expect(socket.emitted.find((e) => e.event === 'room:resume')?.args[0]).toEqual({
@@ -71,12 +71,12 @@ describe('game client', () => {
       'game:update',
       makeUpdate(makeView(), [{ type: 'UNO_CALLED', playerId: 'bob' }]),
     );
-    expect(store.getState().toasts.at(-1)?.text).toBe('Bob : UNO !');
+    expect(store.getState().toasts.at(-1)?.text).toBe('Bob : Dernière !');
   });
 
   it('a kick clears the room and tells the player', () => {
     const { socket, store } = setup();
-    setSession(store, { playerId: 'p1', sessionToken: 'tok', code: 'UNO-ABCD' });
+    setSession(store, { playerId: 'p1', sessionToken: 'tok', code: 'P4-ABCD' });
     socket.serverEmit('room:closed', 'kicked');
     expect(store.getState().session).toBeNull();
     expect(store.getState().toasts.at(-1)?.tone).toBe('error');

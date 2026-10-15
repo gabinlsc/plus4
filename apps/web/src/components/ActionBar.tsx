@@ -18,7 +18,7 @@ export interface ActionBarProps {
   readonly onEmote: (emote: Emote) => void;
 }
 
-/** Whether the local player may call "Uno" right now (mirrors the engine rule). */
+/** Whether the local player may call "Dernière !" (last card) right now (mirrors the engine rule). */
 export function canCallUno(view: ClientGameView): boolean {
   const hand = view.me.hand.length;
   const myTurn = view.currentPlayerId === view.me.id;
@@ -121,7 +121,7 @@ export function ActionBar({
         animate={unoEnabled ? { scale: [1, 1.08, 1] } : { scale: 1 }}
         transition={unoEnabled ? { duration: 0.9, repeat: Infinity } : {}}
       >
-        UNO !
+        Dernière !
       </motion.button>
 
       <div className={styles.emotes}>

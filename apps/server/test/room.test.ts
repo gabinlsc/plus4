@@ -15,7 +15,7 @@ function makeRoom(
 ) {
   const transport = new FakeTransport();
   const room = new Room({
-    code: 'UNO-TEST',
+    code: 'P4-TEST',
     mode: opts.mode ?? 'online',
     hostName: 'Host',
     settings: resolveSettings(opts.settings ?? {}),
@@ -53,7 +53,7 @@ describe('lobby', () => {
   it('broadcasts the lobby with the host seat', () => {
     const { transport, host } = makeRoom();
     const lobby = transport.lastLobby();
-    expect(lobby.code).toBe('UNO-TEST');
+    expect(lobby.code).toBe('P4-TEST');
     expect(lobby.hostId).toBe(host);
     expect(lobby.seats).toHaveLength(1);
     expect(lobby.seats[0]).toMatchObject({ isHost: true, connected: true, isBot: false });

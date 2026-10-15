@@ -239,7 +239,7 @@ export function Game({ update }: { update: GameUpdate }) {
               {me.name}
               {me.score > 0 ? <span className={ui.chip}>{me.score} pts</span> : null}
               {me.uno.declared && me.hand.length === 1 ? (
-                <span className={ui.chip}>UNO annoncé</span>
+                <span className={ui.chip}>Dernière annoncée</span>
               ) : null}
             </div>
           </div>

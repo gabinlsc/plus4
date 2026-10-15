@@ -97,13 +97,13 @@ describe('online room over Socket.IO', () => {
         settings: { allowJumpIn: true, allowStackingDrawCards: true },
       }),
     );
-    expect(host.code).toMatch(/^UNO-[2-9A-HJ-NP-Z]{4}$/);
+    expect(host.code).toMatch(/^P4-[2-9A-HJ-NP-Z]{4}$/);
     expect((await lobbyAfterCreate).settings.allowJumpIn).toBe(true);
 
     const aliceSeesBob = next(alice, 'room:state', (s: LobbyState) => s.seats.length === 2);
     const guest = unwrap(
       await call<SessionInfo>(bob, 'room:join', {
-        code: host.code.slice(4).toLowerCase(),
+        code: host.code.slice('P4-'.length).toLowerCase(),
         playerName: 'Bob',
       }),
     );
@@ -137,7 +137,7 @@ describe('online room over Socket.IO', () => {
       ok: false,
       reason: 'INVALID_PAYLOAD',
     });
-    expect(await call(c, 'room:join', { code: 'UNO-ZZZZ', playerName: 'X' })).toEqual({
+    expect(await call(c, 'room:join', { code: 'P4-ZZZZ', playerName: 'X' })).toEqual({
       ok: false,
       reason: 'ROOM_NOT_FOUND',
     });

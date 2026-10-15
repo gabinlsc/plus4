@@ -120,7 +120,7 @@ export function RulesPanel({ settings, onChange }: RulesPanelProps) {
           </select>
         </label>
         <label>
-          <span className={ui.label}>Oubli du Uno</span>
+          <span className={ui.label}>Oubli du « Dernière ! »</span>
           <select
             className={styles.select}
             disabled={!editable}

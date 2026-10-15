@@ -22,7 +22,7 @@ test('online: create, join by link, configure, start and play', async ({ browser
   await host.getByRole('tab', { name: 'En ligne' }).click();
   await host.getByRole('button', { name: 'Créer la room' }).click();
   const code = (await host.locator('p[class*="_code_"]').textContent()) ?? '';
-  expect(code).toMatch(/^UNO-[2-9A-HJ-NP-Z]{4}$/);
+  expect(code).toMatch(/^P4-[2-9A-HJ-NP-Z]{4}$/);
 
   // Guest opens the invitation link: online tab and code are prefilled.
   await guest.goto(`/?room=${code}`);
@@ -71,7 +71,7 @@ test('online: joining an unknown room explains the error', async ({ page }) => {
   await page.goto('/');
   await enterName(page, 'Eve');
   await page.getByRole('tab', { name: 'En ligne' }).click();
-  await page.getByPlaceholder('UNO-XXXX').fill('UNO-ZZZZ');
+  await page.getByPlaceholder('P4-XXXX').fill('P4-ZZZZ');
   await page.getByRole('button', { name: 'Rejoindre la room' }).click();
   await expect(page.getByRole('alert')).toHaveText('Room introuvable. Vérifie le code.');
 });

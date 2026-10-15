@@ -55,7 +55,7 @@ export interface BotConfig {
 }
 
 export interface RoomSettings {
-  /** Shareable code, format `UNO-XXXX`. */
+  /** Shareable code, format `P4-XXXX`. */
   readonly code: string;
   readonly mode: RoomMode;
   readonly hostId: PlayerId;

@@ -227,7 +227,7 @@ export function CardBackFace() {
         paintOrder="stroke"
         transform="rotate(-18 50 75)"
       >
-        UNO
+        +4
       </text>
     </svg>
   );

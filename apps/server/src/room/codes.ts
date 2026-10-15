@@ -16,7 +16,7 @@ const BOT_NAMES = [
   'Captain Card',
   'Mister Plus4',
   'Lady Reverse',
-  'Uno Bot',
+  'Plus Quatro',
   'Skipper',
   'Wild Willy',
   'Deckard',
