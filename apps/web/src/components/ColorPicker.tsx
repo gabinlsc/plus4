@@ -23,7 +23,7 @@ export function ColorPicker({
             style={{ background: COLOR_HEX[color] }}
             onClick={() => onPick(color)}
           >
-            {COLOR_LABEL[color].toUpperCase()}
+            <span className={styles.colorLabel}>{COLOR_LABEL[color].toUpperCase()}</span>
           </button>
         ))}
       </div>

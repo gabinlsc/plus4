@@ -5,7 +5,7 @@ import { Avatar } from './Avatar';
 import { Modal } from './Modal';
 import modal from './Modal.module.css';
 
-const CONFETTI_COLORS = ['#e5484d', '#f5b400', '#2fa36b', '#2f6fed', '#ffffff'];
+const CONFETTI_COLORS = ['#ff4f4f', '#ffc83d', '#22b573', '#3d7bff', '#c3a6ff', '#111111'];
 
 function Confetti() {
   return (

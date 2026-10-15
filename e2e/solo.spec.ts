@@ -4,6 +4,7 @@ import {
   drawFromPile,
   enterName,
   hand,
+  keepBots,
   status,
   trackErrors,
   waitForGame,
@@ -15,7 +16,7 @@ test('solo: deal, take a turn, and resume the game after a reload', async ({ pag
   await expect(page.getByRole('heading', { name: 'UNO' })).toBeVisible();
 
   await enterName(page, 'Gabin');
-  await page.getByRole('button', { name: '2 bots' }).click();
+  await keepBots(page, 2);
   await page.getByRole('button', { name: 'Lancer la partie' }).click();
 
   await waitForGame(page);
@@ -46,7 +47,7 @@ test('solo: deal, take a turn, and resume the game after a reload', async ({ pag
 test('solo: an invalid card shakes the hand without reaching the server', async ({ page }) => {
   await page.goto('/');
   await enterName(page, 'Gabin');
-  await page.getByRole('button', { name: '1 bot', exact: true }).click();
+  await keepBots(page, 1);
   await page.getByRole('button', { name: 'Lancer la partie' }).click();
   await waitForGame(page);
   await expect(status(page)).toHaveText(MY_TURN, { timeout: 30_000 });

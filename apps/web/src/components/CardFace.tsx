@@ -3,22 +3,31 @@ import type { Card, CardColor } from '@uno/shared';
 import { COLOR_HEX } from '../lib/cards';
 
 const QUADRANTS: readonly CardColor[] = ['red', 'blue', 'yellow', 'green'];
+const INK = '#111111';
+const DISPLAY_FONT = "'Fredoka', 'Arial Rounded MT Bold', sans-serif";
 
 /** Reverse arrows, skip sign, numbers… drawn around (0, 0) at the given scale. */
 function Glyph({ card, fill, scale }: { card: Card; fill: string; scale: number }) {
-  const stroke = 'rgba(0,0,0,0.22)';
   switch (card.value) {
     case 'skip':
       return (
-        <g transform={`scale(${scale})`} fill="none" stroke={fill} strokeWidth={7}>
-          <circle r={17} />
-          <line x1={-12} y1={12} x2={12} y2={-12} />
+        <g transform={`scale(${scale})`} fill="none" strokeLinecap="round">
+          <circle r={17} stroke={INK} strokeWidth={13} />
+          <line x1={-12} y1={12} x2={12} y2={-12} stroke={INK} strokeWidth={13} />
+          <circle r={17} stroke={fill} strokeWidth={7} />
+          <line x1={-12} y1={12} x2={12} y2={-12} stroke={fill} strokeWidth={7} />
         </g>
       );
     case 'reverse': {
       const arrow = '0,-22 12,-8 5,-8 5,10 -5,10 -5,-8 -12,-8';
       return (
-        <g transform={`scale(${scale})`} fill={fill} stroke={stroke} strokeWidth={1.2}>
+        <g
+          transform={`scale(${scale})`}
+          fill={fill}
+          stroke={INK}
+          strokeWidth={3}
+          strokeLinejoin="round"
+        >
           <polygon points={arrow} transform="rotate(45) translate(-7,0)" />
           <polygon points={arrow} transform="rotate(225) translate(-7,0)" />
         </g>
@@ -31,12 +40,13 @@ function Glyph({ card, fill, scale }: { card: Card; fill: string; scale: number 
           transform={`scale(${scale})`}
           y={13}
           textAnchor="middle"
+          fontFamily={DISPLAY_FONT}
           fontSize={38}
-          fontWeight={800}
-          fontStyle="italic"
+          fontWeight={700}
           fill={fill}
-          stroke={stroke}
-          strokeWidth={1.5}
+          stroke={INK}
+          strokeWidth={5}
+          strokeLinejoin="round"
           paintOrder="stroke"
         >
           {card.value === 'draw2' ? '+2' : '+4'}
@@ -44,7 +54,7 @@ function Glyph({ card, fill, scale }: { card: Card; fill: string; scale: number 
       );
     case 'wild':
       return (
-        <g transform={`scale(${scale * 0.55})`}>
+        <g transform={`scale(${scale * 0.55})`} stroke={INK} strokeWidth={4} strokeLinejoin="round">
           {QUADRANTS.map((c, i) => (
             <path
               key={c}
@@ -59,14 +69,15 @@ function Glyph({ card, fill, scale }: { card: Card; fill: string; scale: number 
       return (
         <text
           transform={`scale(${scale})`}
-          y={17}
+          y={18}
           textAnchor="middle"
+          fontFamily={DISPLAY_FONT}
           fontSize={52}
-          fontWeight={800}
-          fontStyle="italic"
+          fontWeight={700}
           fill={fill}
-          stroke={stroke}
-          strokeWidth={1.5}
+          stroke={INK}
+          strokeWidth={5}
+          strokeLinejoin="round"
           paintOrder="stroke"
           textDecoration={card.value === 6 || card.value === 9 ? 'underline' : undefined}
         >
@@ -78,7 +89,7 @@ function Glyph({ card, fill, scale }: { card: Card; fill: string; scale: number 
 
 /** Shape marker per color for color-blind players. */
 function ColorMark({ color }: { color: CardColor }) {
-  const common = { fill: '#fff', stroke: 'rgba(0,0,0,0.35)', strokeWidth: 0.8 };
+  const common = { fill: '#fff', stroke: INK, strokeWidth: 1.6 };
   switch (color) {
     case 'red':
       return <circle r={4.5} {...common} />;
@@ -96,25 +107,29 @@ export interface CardFaceProps {
   readonly colorblind?: boolean;
 }
 
-/** Card artwork on a 100×150 canvas. */
+/** Card artwork on a 100×150 canvas: flat colors, thick ink outlines. */
 export function CardFace({ card, colorblind = false }: CardFaceProps) {
   const clipId = useId();
   const isWild = card.kind === 'wild';
-  const base = isWild ? '#15171f' : COLOR_HEX[card.color];
+  const base = isWild ? INK : COLOR_HEX[card.color];
 
   return (
     <svg viewBox="0 0 100 150" width="100%" height="100%" aria-hidden="true">
       <defs>
         <clipPath id={clipId}>
-          <ellipse cx={50} cy={75} rx={36} ry={56} transform="rotate(28 50 75)" />
+          <ellipse cx={50} cy={75} rx={34} ry={54} transform="rotate(28 50 75)" />
         </clipPath>
-        <linearGradient id={`${clipId}-shine`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity={0.22} />
-          <stop offset="0.5" stopColor="#fff" stopOpacity={0} />
-        </linearGradient>
       </defs>
-      <rect width={100} height={150} rx={11} fill="#fdfdfd" />
-      <rect x={5} y={5} width={90} height={140} rx={8} fill={base} />
+      <rect
+        x={2.5}
+        y={2.5}
+        width={95}
+        height={145}
+        rx={11}
+        fill={base}
+        stroke={INK}
+        strokeWidth={5}
+      />
       {isWild ? (
         <g clipPath={`url(#${clipId})`}>
           {QUADRANTS.map((c, i) => (
@@ -128,31 +143,38 @@ export function CardFace({ card, colorblind = false }: CardFaceProps) {
             />
           ))}
         </g>
-      ) : (
-        <ellipse cx={50} cy={75} rx={36} ry={56} transform="rotate(28 50 75)" fill="#fff" />
-      )}
+      ) : null}
+      <ellipse
+        cx={50}
+        cy={75}
+        rx={34}
+        ry={54}
+        transform="rotate(28 50 75)"
+        fill={isWild ? 'none' : '#fff'}
+        stroke={INK}
+        strokeWidth={4}
+      />
       <g transform="translate(50 75)">
         {isWild && card.value === 'wild' ? null : (
           <Glyph card={card} fill={isWild ? '#fff' : base} scale={isWild ? 1.05 : 1} />
         )}
       </g>
-      <g transform="translate(17 22)">
-        <Glyph card={card} fill="#fff" scale={0.36} />
+      <g transform="translate(18 24)">
+        <Glyph card={card} fill="#fff" scale={0.38} />
       </g>
-      <g transform="translate(83 128) rotate(180)">
-        <Glyph card={card} fill="#fff" scale={0.36} />
+      <g transform="translate(82 126) rotate(180)">
+        <Glyph card={card} fill="#fff" scale={0.38} />
       </g>
       {colorblind && card.kind === 'colored' ? (
         <>
-          <g transform="translate(83 20)">
+          <g transform="translate(82 22)">
             <ColorMark color={card.color} />
           </g>
-          <g transform="translate(17 130)">
+          <g transform="translate(18 128)">
             <ColorMark color={card.color} />
           </g>
         </>
       ) : null}
-      <rect x={5} y={5} width={90} height={140} rx={8} fill={`url(#${clipId}-shine)`} />
     </svg>
   );
 }
@@ -160,19 +182,48 @@ export function CardFace({ card, colorblind = false }: CardFaceProps) {
 export function CardBackFace() {
   return (
     <svg viewBox="0 0 100 150" width="100%" height="100%" aria-hidden="true">
-      <rect width={100} height={150} rx={11} fill="#fdfdfd" />
-      <rect x={5} y={5} width={90} height={140} rx={8} fill="#15171f" />
-      <ellipse cx={50} cy={75} rx={36} ry={56} transform="rotate(28 50 75)" fill="#e5484d" />
+      <rect
+        x={2.5}
+        y={2.5}
+        width={95}
+        height={145}
+        rx={11}
+        fill={INK}
+        stroke={INK}
+        strokeWidth={5}
+      />
+      <rect
+        x={9}
+        y={9}
+        width={82}
+        height={132}
+        rx={7}
+        fill="none"
+        stroke="#fff"
+        strokeWidth={2}
+        strokeDasharray="5 5"
+      />
+      <ellipse
+        cx={50}
+        cy={75}
+        rx={32}
+        ry={50}
+        transform="rotate(28 50 75)"
+        fill="#ff4f4f"
+        stroke="#fff"
+        strokeWidth={3}
+      />
       <text
         x={50}
         y={86}
         textAnchor="middle"
+        fontFamily={DISPLAY_FONT}
         fontSize={30}
-        fontWeight={800}
-        fontStyle="italic"
-        fill="#f5b400"
-        stroke="#15171f"
-        strokeWidth={3}
+        fontWeight={700}
+        fill="#ffd84d"
+        stroke={INK}
+        strokeWidth={5}
+        strokeLinejoin="round"
         paintOrder="stroke"
         transform="rotate(-18 50 75)"
       >

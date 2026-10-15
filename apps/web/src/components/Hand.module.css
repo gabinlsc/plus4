@@ -23,5 +23,5 @@
 }
 
 .myTurn {
-  filter: drop-shadow(0 0 18px rgba(124, 140, 255, 0.35));
+  /* L'état « à toi de jouer » est porté par la barre d'action et les pastilles des cartes. */
 }

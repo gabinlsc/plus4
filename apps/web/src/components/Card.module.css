@@ -4,13 +4,13 @@
   aspect-ratio: 2 / 3;
   border: 0;
   padding: 0;
-  border-radius: calc(var(--card-w) * 0.11);
+  border-radius: calc(var(--card-w) * 0.12);
   background: transparent;
   box-shadow: var(--shadow-card);
   flex: none;
   transition:
     filter 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.15s ease-out;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -28,42 +28,53 @@
   box-shadow: var(--shadow-card-hover);
 }
 
+/* Cartes non jouables : grisées, sans disparaître. */
 .dimmed {
-  filter: brightness(0.55) saturate(0.7);
+  filter: grayscale(0.9) brightness(0.88) contrast(0.9);
 }
 
-.playable {
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.85),
-    var(--shadow-card-hover);
+/* Cartes jouables : pastille verte, l'œil va tout de suite dessus. */
+.playable::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--mint);
+  border: 3px solid var(--ink);
 }
 
 .selected {
   box-shadow:
-    0 0 0 3px var(--accent),
-    0 0 24px rgba(124, 140, 255, 0.6),
-    var(--shadow-card-hover);
+    0 0 0 3px var(--ink),
+    0 0 0 7px var(--banana),
+    6px 6px 0 7px var(--ink);
 }
 
 .jumpIn {
-  animation: jumpGlow 1s ease-in-out infinite alternate;
+  animation: jumpPulse 0.9s ease-in-out infinite alternate;
 }
 
-@keyframes jumpGlow {
+@keyframes jumpPulse {
   from {
     box-shadow:
-      0 0 0 2px #ffd34d,
-      0 0 12px rgba(255, 211, 77, 0.5);
+      0 0 0 3px var(--ink),
+      0 0 0 6px var(--banana),
+      var(--shadow-card);
   }
   to {
     box-shadow:
-      0 0 0 3px #ffd34d,
-      0 0 28px rgba(255, 211, 77, 0.95);
+      0 0 0 3px var(--ink),
+      0 0 0 10px var(--banana),
+      var(--shadow-card);
   }
 }
 
 .sm {
   --card-w: clamp(36px, 4.6vw, 52px);
+  box-shadow: 2px 2px 0 var(--ink);
 }
 
 .lg {

@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { BotDifficulty, LobbyState } from '@uno/shared';
 import { Avatar } from '../components/Avatar';
+import { LEVELS } from '../components/BotPicker';
+import { Decor } from '../components/Decor';
 import { RulesPanel } from '../components/RulesPanel';
 import { useApp, useClient, useStoreApi } from '../net/context';
 import { pushToast } from '../store/store';
@@ -33,124 +35,130 @@ export function RoomLobby({ lobby }: { lobby: LobbyState }) {
   };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.layout}>
-        <section className={ui.panel}>
-          <div className={styles.header}>
-            <div>
-              <span className={ui.label}>Code de la room</span>
-              <p className={styles.code}>{lobby.code}</p>
-            </div>
-            <button type="button" className={ui.button} onClick={() => void copy()}>
-              🔗 Copier le lien
-            </button>
-          </div>
-
-          <div className={styles.seats}>
-            <AnimatePresence initial={false}>
-              {lobby.seats.map((seat) => (
-                <motion.div
-                  key={seat.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className={`${styles.seat} ${seat.connected ? '' : styles.offline}`}
-                >
-                  <Avatar name={seat.name} isBot={seat.isBot} />
-                  <div className={styles.seatInfo}>
-                    <div className={styles.seatName}>
-                      {seat.name}
-                      {seat.id === meId ? ' (toi)' : ''}
-                    </div>
-                    <div className={styles.seatMeta}>
-                      {seat.isHost ? <span className={ui.chip}>👑 Hôte</span> : null}
-                      {seat.isBot && seat.botDifficulty ? (
-                        <span className={ui.chip}>{DIFFICULTY_LABEL[seat.botDifficulty]}</span>
-                      ) : null}
-                      {!seat.isBot && !seat.isHost ? (
-                        <span className={`${ui.chip} ${seat.ready ? styles.ready : ''}`}>
-                          {seat.ready ? '✓ Prêt' : 'En attente'}
-                        </span>
-                      ) : null}
-                      {!seat.connected ? <span className={ui.chip}>Déconnecté</span> : null}
-                    </div>
-                  </div>
-                  {isHost && seat.id !== meId ? (
-                    <button
-                      type="button"
-                      className={styles.iconButton}
-                      aria-label={seat.isBot ? `Retirer ${seat.name}` : `Exclure ${seat.name}`}
-                      onClick={() =>
-                        void (seat.isBot ? client.removeBot(seat.id) : client.kick(seat.id))
-                      }
-                    >
-                      ✕
-                    </button>
-                  ) : null}
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            {Array.from({ length: emptySeats }, (_, i) => (
-              <div key={`empty-${i}`} className={`${styles.seat} ${styles.seatEmpty}`}>
-                Place libre
+    <>
+      <Decor />
+      <div className={styles.page}>
+        <div className={styles.layout}>
+          <section className={ui.panel}>
+            <div className={styles.header}>
+              <div>
+                <span className={ui.label}>Code de la room</span>
+                <p className={styles.code}>{lobby.code}</p>
               </div>
-            ))}
-          </div>
+              <button type="button" className={ui.button} onClick={() => void copy()}>
+                🔗 Copier le lien
+              </button>
+            </div>
 
-          {isHost && emptySeats > 0 ? (
-            <div className={styles.botAdd}>
-              <span className={ui.muted}>Ajouter un bot :</span>
-              {(Object.keys(DIFFICULTY_LABEL) as BotDifficulty[]).map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  className={ui.button}
-                  onClick={() => void client.addBot(d)}
-                >
-                  + {DIFFICULTY_LABEL[d]}
-                </button>
+            <div className={styles.seats}>
+              <AnimatePresence initial={false}>
+                {lobby.seats.map((seat) => (
+                  <motion.div
+                    key={seat.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className={`${styles.seat} ${seat.connected ? '' : styles.offline}`}
+                  >
+                    <Avatar name={seat.name} isBot={seat.isBot} />
+                    <div className={styles.seatInfo}>
+                      <div className={styles.seatName}>
+                        {seat.name}
+                        {seat.id === meId ? ' (toi)' : ''}
+                      </div>
+                      <div className={styles.seatMeta}>
+                        {seat.isHost ? <span className={ui.chip}>👑 Hôte</span> : null}
+                        {seat.isBot && seat.botDifficulty ? (
+                          <span className={ui.chip}>
+                            {LEVELS.find((l) => l.id === seat.botDifficulty)?.emoji}{' '}
+                            {DIFFICULTY_LABEL[seat.botDifficulty]}
+                          </span>
+                        ) : null}
+                        {!seat.isBot && !seat.isHost ? (
+                          <span className={`${ui.chip} ${seat.ready ? styles.ready : ''}`}>
+                            {seat.ready ? '✓ Prêt' : 'En attente'}
+                          </span>
+                        ) : null}
+                        {!seat.connected ? <span className={ui.chip}>Déconnecté</span> : null}
+                      </div>
+                    </div>
+                    {isHost && seat.id !== meId ? (
+                      <button
+                        type="button"
+                        className={styles.iconButton}
+                        aria-label={seat.isBot ? `Retirer ${seat.name}` : `Exclure ${seat.name}`}
+                        onClick={() =>
+                          void (seat.isBot ? client.removeBot(seat.id) : client.kick(seat.id))
+                        }
+                      >
+                        ✕
+                      </button>
+                    ) : null}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              {Array.from({ length: emptySeats }, (_, i) => (
+                <div key={`empty-${i}`} className={`${styles.seat} ${styles.seatEmpty}`}>
+                  Place libre
+                </div>
               ))}
             </div>
-          ) : null}
 
-          <div className={styles.actions}>
-            {isHost ? (
+            {isHost && emptySeats > 0 ? (
+              <div className={styles.botAdd}>
+                <span className={ui.muted}>Ajouter un bot :</span>
+                {LEVELS.map((level) => (
+                  <button
+                    key={level.id}
+                    type="button"
+                    className={ui.button}
+                    onClick={() => void client.addBot(level.id)}
+                  >
+                    <span aria-hidden="true">{level.emoji}</span> + {level.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+
+            <div className={styles.actions}>
+              {isHost ? (
+                <button
+                  type="button"
+                  className={`${ui.button} ${ui.primary}`}
+                  disabled={!canStart}
+                  onClick={() => void client.start()}
+                >
+                  {canStart ? 'Lancer la partie' : 'En attente de joueurs…'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${ui.button} ${me?.ready ? '' : ui.primary}`}
+                  onClick={() => void client.setReady(!me?.ready)}
+                >
+                  {me?.ready ? 'Je ne suis plus prêt' : 'Je suis prêt'}
+                </button>
+              )}
               <button
                 type="button"
-                className={`${ui.button} ${ui.primary}`}
-                disabled={!canStart}
-                onClick={() => void client.start()}
+                className={`${ui.button} ${ui.ghost}`}
+                onClick={() => client.leaveRoom()}
               >
-                {canStart ? 'Lancer la partie' : 'En attente de joueurs…'}
+                Quitter
               </button>
-            ) : (
-              <button
-                type="button"
-                className={`${ui.button} ${me?.ready ? '' : ui.primary}`}
-                onClick={() => void client.setReady(!me?.ready)}
-              >
-                {me?.ready ? 'Je ne suis plus prêt' : 'Je suis prêt'}
-              </button>
-            )}
-            <button
-              type="button"
-              className={`${ui.button} ${ui.ghost}`}
-              onClick={() => client.leaveRoom()}
-            >
-              Quitter
-            </button>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section className={ui.panel}>
-          <h2 className={styles.sectionTitle}>Règles {isHost ? '' : '(choisies par l’hôte)'}</h2>
-          <RulesPanel
-            settings={lobby.settings}
-            {...(isHost ? { onChange: (patch) => void client.updateSettings(patch) } : {})}
-          />
-        </section>
+          <section className={ui.panel}>
+            <h2 className={styles.sectionTitle}>Règles {isHost ? '' : '(choisies par l’hôte)'}</h2>
+            <RulesPanel
+              settings={lobby.settings}
+              {...(isHost ? { onChange: (patch) => void client.updateSettings(patch) } : {})}
+            />
+          </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

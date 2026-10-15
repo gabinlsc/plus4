@@ -1,0 +1,263 @@
+.picker {
+  display: grid;
+  gap: 16px;
+}
+
+/* ---------- Réglages rapides ---------- */
+.presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.preset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  border: var(--bd);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 0.15s var(--spring),
+    box-shadow 0.15s ease-out,
+    background 0.15s ease;
+}
+
+.preset:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.preset strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.preset small {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.presetEmoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.presetActive {
+  background: var(--banana);
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+@media (max-width: 480px) {
+  .preset {
+    flex-direction: column;
+    text-align: center;
+    gap: 2px;
+  }
+  .preset small {
+    display: none;
+  }
+}
+
+/* ---------- Mini-table vue de dessus ---------- */
+.table {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas:
+    '.  b2 b3 .'
+    'b1 felt felt b4'
+    '.  me me .';
+  align-items: center;
+  justify-items: center;
+  gap: 10px 8px;
+  padding: 6px 0;
+}
+
+.felt {
+  grid-area: felt;
+  width: 100%;
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 48% / 50%;
+  background-color: var(--mint);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.14) 1.3px, transparent 1.3px);
+  background-size: 14px 14px;
+  border: var(--bd-lg);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.felt strong {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 3.6vw, 20px);
+  font-weight: 700;
+}
+
+.felt span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.place {
+  width: 100%;
+  max-width: 108px;
+  display: flex;
+  justify-content: center;
+}
+
+.botWrap {
+  position: relative;
+  width: 100%;
+}
+
+.bot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px 7px;
+  border-radius: 16px;
+  border: var(--bd);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    transform 0.15s var(--spring),
+    box-shadow 0.15s ease-out;
+}
+
+.bot:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.bot:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.easy {
+  background: var(--mint);
+}
+
+.normal {
+  background: var(--sky);
+}
+
+.hard {
+  background: var(--coral);
+}
+
+.botEmoji {
+  font-size: clamp(26px, 6vw, 32px);
+  line-height: 1.1;
+}
+
+.botName {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.botLevel {
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.remove {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.remove:hover {
+  background: var(--coral);
+}
+
+.empty {
+  width: 100%;
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 16px;
+  border: 3px dashed var(--ink);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.empty span {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.empty small {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.empty:hover:not(:disabled) {
+  background: var(--banana);
+}
+
+.empty:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.me {
+  grid-area: me;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: var(--bd);
+  background: var(--banana);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  rotate: -2deg;
+}
+
+.help {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}

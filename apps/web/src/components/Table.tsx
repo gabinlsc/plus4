@@ -17,7 +17,7 @@ export interface TableProps {
 
 export function Table({ view, discard, canDraw, drawLabel, colorblind, onDraw }: TableProps) {
   const anchors = useAnchors();
-  const glow = view.top.activeColor ? COLOR_HEX[view.top.activeColor] : '#ffffff';
+  const glow = view.top.activeColor ? COLOR_HEX[view.top.activeColor] : 'var(--paper)';
   const meId = view.me.id;
 
   /** Where a card played by `playerId` comes from, relative to the discard pile. */
@@ -49,22 +49,22 @@ export function Table({ view, discard, canDraw, drawLabel, colorblind, onDraw }:
             markerHeight="5"
             orient="auto"
           >
-            <path d="M0,0 L10,5 L0,10 z" fill="#fff" />
+            <path d="M0,0 L10,5 L0,10 z" fill="#111" />
           </marker>
         </defs>
         <path
           d="M 30 60 A 70 48 0 0 1 170 60"
           fill="none"
-          stroke="#fff"
-          strokeWidth="1.5"
+          stroke="#111"
+          strokeWidth="2.5"
           strokeDasharray="4 6"
           markerEnd="url(#arrow)"
         />
         <path
           d="M 170 60 A 70 48 0 0 1 30 60"
           fill="none"
-          stroke="#fff"
-          strokeWidth="1.5"
+          stroke="#111"
+          strokeWidth="2.5"
           strokeDasharray="4 6"
           markerEnd="url(#arrow)"
         />
@@ -92,11 +92,7 @@ export function Table({ view, discard, canDraw, drawLabel, colorblind, onDraw }:
       </button>
 
       <div className={styles.pile} ref={anchors.ref('discard')}>
-        <div
-          className={styles.colorRing}
-          style={{ boxShadow: `0 0 0 2px ${glow}66, 0 0 42px ${glow}` }}
-          aria-hidden="true"
-        />
+        <div className={styles.colorRing} style={{ background: glow }} aria-hidden="true" />
         <AnimatePresence initial={false}>
           {discard.map((played, i) => {
             const fromMe = played.playerId === meId;
