@@ -108,7 +108,7 @@ export function Home() {
             ))}
           </div>
           <h1 className={styles.title}>
-            <span className={styles.titleHl}>UNO</span>
+            <span className={styles.titleHl}>+4</span>
           </h1>
           <p className={styles.subtitle}>En solo contre des bots ou en ligne entre amis.</p>
         </header>
@@ -194,14 +194,14 @@ export function Home() {
                   </span>
                   Rejoindre
                 </h2>
-                <p className={ui.muted}>Entre le code reçu, par exemple UNO-8F2A.</p>
+                <p className={ui.muted}>Entre le code reçu, par exemple P4-8F2A.</p>
                 <label>
                   <span className={ui.label}>Code de la room</span>
                   <input
                     className={`${ui.input} ${styles.codeInput}`}
                     value={code}
                     maxLength={8}
-                    placeholder="UNO-XXXX"
+                    placeholder="P4-XXXX"
                     onChange={(e) => setCode(e.target.value.toUpperCase())}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && codeOk && nameOk) void join();

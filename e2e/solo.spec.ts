@@ -13,7 +13,7 @@ import {
 test('solo: deal, take a turn, and resume the game after a reload', async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'UNO' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '+4' })).toBeVisible();
 
   await enterName(page, 'Gabin');
   await keepBots(page, 2);
@@ -23,7 +23,7 @@ test('solo: deal, take a turn, and resume the game after a reload', async ({ pag
   expect(await hand(page).count()).toBeGreaterThanOrEqual(7);
   await expect(page.locator('[class*="_seat_"]')).toHaveCount(2);
   const code = await page.locator('[class*="_chip_"]').first().textContent();
-  expect(code).toMatch(/^UNO-/);
+  expect(code).toMatch(/^P4-/);
 
   // Bots play first (the human deals); wait until it is our turn, then draw.
   await expect(status(page)).toHaveText(MY_TURN, { timeout: 30_000 });

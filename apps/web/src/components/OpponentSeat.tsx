@@ -91,7 +91,7 @@ export function OpponentSeat({
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
             >
-              UNO
+              DERNIÈRE
             </motion.span>
           ) : null}
         </AnimatePresence>
@@ -136,7 +136,7 @@ export function OpponentSeat({
             exit={{ scale: 0 }}
             transition={{ duration: 0.6, repeat: Infinity }}
           >
-            Contre-Uno !
+            Contre !
           </motion.button>
         ) : null}
       </AnimatePresence>

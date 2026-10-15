@@ -95,7 +95,7 @@ describe('Game screen', () => {
         seat('bob', 'Bob', 1, { uno: { declared: false, vulnerable: true } }),
       ],
     });
-    await userEvent.click(screen.getByRole('button', { name: 'Contre-Uno !' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Contre !' }));
     expect(client.intent).toHaveBeenCalledWith({ type: 'CATCH_UNO', targetId: 'bob' });
   });
 

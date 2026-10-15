@@ -1,6 +1,6 @@
-# UNO — multijoueur temps réel
+# +4 — jeu de cartes multijoueur en temps réel
 
-Plateforme web de Uno : **solo contre 1 à 4 bots** ou **en ligne jusqu’à 6 joueurs** dans des rooms privées (`UNO-8F2A`), avec des **règles maison configurables** (interception, empilement des +2/+4, 7 et 0, contestation du +4…).
+Plateforme web de **+4** (« Plus Quatre »), un jeu de défausse par couleurs et chiffres de la famille du Huit américain : **solo contre 1 à 4 bots** ou **en ligne jusqu’à 6 joueurs** dans des rooms privées (`P4-8F2A`), avec des **règles maison configurables** (interception, empilement des +2/+4, 7 et 0, contestation du +4…).
 
 - Serveur **autoritaire** (Node.js + Socket.IO) : il est la seule source de vérité, les clients n’envoient que des intentions.
 - Moteur de jeu **pur et déterministe**, développé en TDD.
@@ -27,8 +27,8 @@ pnpm start        # un seul processus : API + WebSocket + client sur :3001
 Ou avec Docker :
 
 ```bash
-docker build -t uno .
-docker run -p 3001:3001 uno
+docker build -t plus4 .
+docker run -p 3001:3001 plus4
 ```
 
 | Variable                   | Défaut                  | Rôle                                                                           |
@@ -72,7 +72,7 @@ Client ──intention {type, expectedVersion}──▶ Room ──▶ Engine.ap
    └──── game:update {vue privée, événements, échéance} ◀──┘ (un envoi par joueur)
 ```
 
-- **Machine d’état** : `AWAITING_PLAY`, `AWAITING_PLAY_DRAWN`, `AWAITING_COLOR`, `AWAITING_SWAP_TARGET`, `AWAITING_CHALLENGE`, `ROUND_OVER`, `GAME_OVER`. Dans chaque phase, seul le joueur courant peut agir ; les actions hors tour (interception, Uno, contre-Uno) sont validées séparément.
+- **Machine d’état** : `AWAITING_PLAY`, `AWAITING_PLAY_DRAWN`, `AWAITING_COLOR`, `AWAITING_SWAP_TARGET`, `AWAITING_CHALLENGE`, `ROUND_OVER`, `GAME_OVER`. Dans chaque phase, seul le joueur courant peut agir ; les actions hors tour (interception, annonce « Dernière ! », contre) sont validées séparément.
 - **Concurrence** : chaque intention porte la version de l’état. Si deux joueurs coupent en même temps, le premier gagne et le second reçoit `STALE_STATE`.
 - **Information cachée** : `projectForPlayer` n’expose que ta main ; les adversaires ne sont qu’un nombre de cartes.
 - **Déterminisme** : mélanges par PRNG à graine (mulberry32) stockée dans l’état, donc parties rejouables et tests stables.
@@ -80,7 +80,7 @@ Client ──intention {type, expectedVersion}──▶ Room ──▶ Engine.ap
 
 ## Règles
 
-Uno classique (108 cartes) plus les variantes suivantes, activables par l’hôte (`GameSettings`) :
+Jeu de 108 cartes (4 couleurs, +2, inversion, passe-tour, joker et +4) plus les variantes suivantes, activables par l’hôte (`GameSettings`) :
 
 | Règle                         | Clé                                            | Effet                                                                                                                                                              |
 | ----------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -93,7 +93,7 @@ Uno classique (108 cartes) plus les variantes suivantes, activables par l’hôt
 | Pose multiple                 | `allowMultiplePlay`                            | Poser plusieurs cartes de même valeur en une fois.                                                                                                                 |
 | Pioche jusqu’à jouer          | `drawUntilPlayable`                            | On pioche tant qu’aucune carte jouable ne sort.                                                                                                                    |
 | Jouer la carte piochée        | `allowPlayAfterDraw`                           | La carte piochée peut être posée immédiatement.                                                                                                                    |
-| Oubli du Uno                  | `unoPenalty`                                   | Pénalité (2 ou 4 cartes) si un adversaire te signale avant la prochaine action.                                                                                    |
+| Oubli du « Dernière ! »       | `unoPenalty`                                   | Pénalité (2 ou 4 cartes) si un adversaire te signale avant la prochaine action.                                                                                    |
 | Partie                        | `initialHandSize`, `turnTimeoutSec`, `scoring` | Taille de main, minuteur par tour, manche unique ou partie en points.                                                                                              |
 
 Préréglages : **Classique**, **Maison** (interception + empilement), **Chaos** (tout activé).

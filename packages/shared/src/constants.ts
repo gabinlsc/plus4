@@ -40,12 +40,14 @@ export function cardPoints(value: CardValue): number {
   return 20;
 }
 
-export const ROOM_CODE_PREFIX = 'UNO-';
+export const ROOM_CODE_PREFIX = 'P4-';
 /** No 0/O/1/I to avoid ambiguity when read aloud. */
 export const ROOM_CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
-export const ROOM_CODE_REGEX = /^UNO-[2-9A-HJ-NP-Z]{4}$/;
+export const ROOM_CODE_REGEX = /^P4-[2-9A-HJ-NP-Z]{4}$/;
 
 export function normalizeRoomCode(input: string): string {
   const raw = input.trim().toUpperCase().replace(/\s+/g, '');
-  return raw.startsWith(ROOM_CODE_PREFIX) ? raw : `${ROOM_CODE_PREFIX}${raw}`;
+  // « P4-8F2A », « p4 8f2a », « 8F2A » et les anciens codes « UNO-8F2A » donnent tous P4-8F2A
+  const body = raw.length > 4 ? raw.replace(/^(P4|UNO)-?/, '') : raw;
+  return `${ROOM_CODE_PREFIX}${body}`;
 }

@@ -23,13 +23,13 @@ export function describeEvent(
           }
         : null;
     case 'UNO_CALLED':
-      return { text: `${nameOf(event.playerId)} : UNO !`, tone: 'alert' };
+      return { text: `${nameOf(event.playerId)} : Dernière !`, tone: 'alert' };
     case 'UNO_CAUGHT':
       return {
         text:
           event.target === meId
-            ? `${nameOf(event.by)} t’a pris sans Uno !`
-            : `${nameOf(event.by)} a pris ${nameOf(event.target)} sans Uno !`,
+            ? `${nameOf(event.by)} t’a pris sans annonce !`
+            : `${nameOf(event.by)} a pris ${nameOf(event.target)} sans annonce !`,
         tone: event.target === meId ? 'error' : 'info',
       };
     case 'CHALLENGE_RESOLVED':

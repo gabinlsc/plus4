@@ -39,19 +39,21 @@ describe('parseGameIntent', () => {
 
 describe('room codes', () => {
   it('normalizes user input', () => {
-    expect(normalizeRoomCode(' uno-8f2a ')).toBe('UNO-8F2A');
-    expect(normalizeRoomCode('8f2a')).toBe('UNO-8F2A');
+    expect(normalizeRoomCode(' p4-8f2a ')).toBe('P4-8F2A');
+    expect(normalizeRoomCode('8f2a')).toBe('P4-8F2A');
+    expect(normalizeRoomCode('p4 8f2a')).toBe('P4-8F2A');
+    expect(normalizeRoomCode('P48F2A')).toBe('P4-8F2A');
+    // Les codes partagés avant le renommage restent utilisables.
+    expect(normalizeRoomCode('UNO-8F2A')).toBe('P4-8F2A');
   });
 
   it('rejects ambiguous characters', () => {
-    expect(ROOM_CODE_REGEX.test('UNO-8F2A')).toBe(true);
-    expect(ROOM_CODE_REGEX.test('UNO-O0I1')).toBe(false);
+    expect(ROOM_CODE_REGEX.test('P4-8F2A')).toBe(true);
+    expect(ROOM_CODE_REGEX.test('P4-O0I1')).toBe(false);
   });
 
   it('join payload normalizes the code', () => {
-    expect(joinRoomPayloadSchema.parse({ code: 'abcd', playerName: 'Gabin' }).code).toBe(
-      'UNO-ABCD',
-    );
+    expect(joinRoomPayloadSchema.parse({ code: 'abcd', playerName: 'Gabin' }).code).toBe('P4-ABCD');
     expect(joinRoomPayloadSchema.safeParse({ code: 'xx', playerName: 'Gabin' }).success).toBe(
       false,
     );

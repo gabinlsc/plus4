@@ -26,10 +26,10 @@ describe('describeEvent', () => {
       ),
     ).toBeNull();
     expect(describeEvent({ type: 'UNO_CALLED', playerId: 'eve' }, nameOf, 'me')?.text).toBe(
-      'Eve : UNO !',
+      'Eve : Dernière !',
     );
     expect(describeEvent({ type: 'UNO_CAUGHT', by: 'bob', target: 'me' }, nameOf, 'me')).toEqual({
-      text: 'Bob t’a pris sans Uno !',
+      text: 'Bob t’a pris sans annonce !',
       tone: 'error',
     });
   });

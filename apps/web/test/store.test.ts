@@ -76,16 +76,16 @@ describe('applyGameUpdate', () => {
 describe('persistence', () => {
   it('stores the session and preferences across reloads', () => {
     const store = createAppStore();
-    setSession(store, { playerId: 'p', sessionToken: 't', code: 'UNO-ABCD' });
+    setSession(store, { playerId: 'p', sessionToken: 't', code: 'P4-ABCD' });
     setPrefs(store, { name: 'Gabin', colorblind: true });
     const reloaded = createAppStore();
-    expect(reloaded.getState().session?.code).toBe('UNO-ABCD');
+    expect(reloaded.getState().session?.code).toBe('P4-ABCD');
     expect(reloaded.getState().prefs).toEqual({ name: 'Gabin', colorblind: true });
   });
 
   it('leaving a room clears the session and game state', () => {
     const store = createAppStore();
-    setSession(store, { playerId: 'p', sessionToken: 't', code: 'UNO-ABCD' });
+    setSession(store, { playerId: 'p', sessionToken: 't', code: 'P4-ABCD' });
     applyGameUpdate(store, makeUpdate(makeView()));
     leaveRoomState(store, 'kicked');
     expect(store.getState()).toMatchObject({
