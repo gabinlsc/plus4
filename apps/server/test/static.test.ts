@@ -90,6 +90,13 @@ describe('loadConfig', () => {
     });
   });
 
+  it('reads the optional results file', () => {
+    expect(loadConfig({ RESULTS_FILE: '/data/results.jsonl' }).resultsFile).toBe(
+      '/data/results.jsonl',
+    );
+    expect(loadConfig({}).resultsFile).toBeUndefined();
+  });
+
   it('rejects an invalid port', () => {
     expect(() => loadConfig({ PORT: 'abc' })).toThrow();
   });

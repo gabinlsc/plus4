@@ -25,6 +25,7 @@ import {
   type ServerGameState,
 } from '@uno/shared';
 import { pickBotName, uniqueName } from './codes';
+import type { GameRecord } from '../results';
 
 export interface RoomTransport {
   lobby(state: LobbyState): void;
@@ -55,6 +56,8 @@ export interface RoomHooks {
   onSeatRemoved?(playerId: PlayerId): void;
   /** The room has no human left and has been disposed. */
   onDisposed?(): void;
+  /** A game reached GAME_OVER with at least one human still at the table. */
+  onGameFinished?(record: GameRecord): void;
 }
 
 export interface RoomOptions {
@@ -468,8 +471,45 @@ export class Room {
     this.game = result.state;
     this.updateDeadline(previous, actor);
     for (const s of this.activeHumans()) this.sendGame(s.id, result.events);
-    if (result.state.phase.type === 'GAME_OVER') this.broadcastLobby();
+    if (result.state.phase.type === 'GAME_OVER') {
+      this.broadcastLobby();
+      if (previous?.phase.type !== 'GAME_OVER') this.recordGame(result.state);
+    }
     this.scheduleAutomation();
+  }
+
+  /**
+   * Reports the finished game for the leaderboard. Humans who left or were on
+   * autopilot at the end are left out: a bot played for them.
+   */
+  private recordGame(state: ServerGameState): void {
+    if (!this.hooks.onGameFinished || state.phase.type !== 'GAME_OVER') return;
+    const winnerId = state.phase.winnerId;
+    const ranked = [...state.players].sort(
+      (a, b) =>
+        Number(b.id === winnerId) - Number(a.id === winnerId) ||
+        b.score - a.score ||
+        a.hand.length - b.hand.length,
+    );
+    const players = ranked.flatMap((p, i) => {
+      const seat = this.seats.find((s) => s.id === p.id);
+      if (!seat || (!seat.isBot && (seat.left || seat.autopilot))) return [];
+      return [
+        { name: p.name, bot: seat.isBot, rank: i + 1, won: p.id === winnerId, score: p.score },
+      ];
+    });
+    if (!players.some((p) => !p.bot)) return;
+    try {
+      this.hooks.onGameFinished({
+        v: 1,
+        t: Math.floor(this.now() / 1000),
+        game: 'uno',
+        mode: this.mode,
+        players,
+      });
+    } catch (e) {
+      console.error('[uno] onGameFinished failed', e);
+    }
   }
 
   /** The turn timer restarts only when the turn moves or its owner acts. */

@@ -1,15 +1,18 @@
 import { createUnoServer } from './app';
 import { loadConfig } from './config';
+import { fileResultSink } from './results';
 
 const config = loadConfig();
 const server = createUnoServer({
   corsOrigins: config.corsOrigins,
   ...(config.staticDir ? { staticDir: config.staticDir } : {}),
+  ...(config.resultsFile ? { results: fileResultSink(config.resultsFile) } : {}),
 });
 const port = await server.listen(config.port);
 console.log(
   `[uno] server listening on :${port} (CORS: ${config.corsOrigins.join(', ')}` +
-    `${config.staticDir ? `, serving ${config.staticDir}` : ''})`,
+    `${config.staticDir ? `, serving ${config.staticDir}` : ''}` +
+    `${config.resultsFile ? `, results → ${config.resultsFile}` : ''})`,
 );
 
 const shutdown = (signal: string) => {

@@ -6,6 +6,8 @@ export interface ServerConfig {
   readonly corsOrigins: readonly string[];
   /** Built web client to serve, if any (resolved against the working directory). */
   readonly staticDir: string | undefined;
+  /** Finished games are appended here, one JSON object per line (optional). */
+  readonly resultsFile: string | undefined;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
@@ -18,5 +20,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
     .map((o) => o.trim())
     .filter(Boolean);
   const staticDir = env.STATIC_DIR ? resolve(env.STATIC_DIR) : undefined;
-  return { port, corsOrigins, staticDir };
+  const resultsFile = env.RESULTS_FILE ? resolve(env.RESULTS_FILE) : undefined;
+  return { port, corsOrigins, staticDir, resultsFile };
 }

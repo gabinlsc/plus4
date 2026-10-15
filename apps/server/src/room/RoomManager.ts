@@ -8,6 +8,7 @@ import {
   type SessionInfo,
 } from '@uno/shared';
 import { generateRoomCode } from './codes';
+import type { ResultSink } from '../results';
 import { Room, type RoomTimings, type RoomTransport } from './Room';
 
 interface Session {
@@ -19,6 +20,8 @@ export interface RoomManagerOptions {
   readonly transportFor: (code: string) => RoomTransport;
   readonly random?: () => number;
   readonly timings?: Partial<RoomTimings>;
+  /** Receives every finished game (leaderboard). */
+  readonly results?: ResultSink;
 }
 
 /** Registry of rooms and reconnection sessions. Payloads must be validated by the caller. */
@@ -63,6 +66,7 @@ export class RoomManager {
       hooks: {
         onSeatRemoved: (playerId) => this.revoke(playerId),
         onDisposed: () => this.forget(room),
+        ...(this.options.results ? { onGameFinished: this.options.results } : {}),
       },
       ...(this.options.random ? { random: this.options.random } : {}),
       ...(this.options.timings ? { timings: this.options.timings } : {}),
