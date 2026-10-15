@@ -1,0 +1,84 @@
+.decor {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob,
+.doodle {
+  position: absolute;
+}
+
+.blobTop {
+  top: -6rem;
+  right: -6rem;
+  width: 20rem;
+  height: 20rem;
+}
+
+.blobBottom {
+  bottom: -12rem;
+  left: -12rem;
+  width: 24rem;
+  height: 24rem;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(-12px) rotate(calc(var(--r, 0deg) + 6deg));
+  }
+}
+
+.doodle {
+  animation: float var(--d, 7s) ease-in-out infinite;
+}
+
+.star {
+  top: 9%;
+  left: 6%;
+  width: 3.6rem;
+  height: 3.6rem;
+  --r: -12deg;
+}
+
+.sparkle {
+  bottom: 12%;
+  right: 7%;
+  width: 2.8rem;
+  height: 2.8rem;
+  --d: 5s;
+}
+
+.cards {
+  top: 42%;
+  right: 3%;
+  width: 5rem;
+  height: 5rem;
+  --r: 8deg;
+  --d: 8s;
+}
+
+@media (max-width: 767px) {
+  .blobTop {
+    width: 9rem;
+    height: 9rem;
+    top: -4.5rem;
+    right: -4.5rem;
+  }
+  .blobBottom {
+    width: 12rem;
+    height: 12rem;
+    bottom: -7rem;
+    left: -7rem;
+  }
+  .star,
+  .cards {
+    display: none;
+  }
+}

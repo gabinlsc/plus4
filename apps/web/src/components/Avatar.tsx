@@ -1,6 +1,6 @@
 import styles from './Avatar.module.css';
 
-const PALETTE = ['#7c8cff', '#ff7a90', '#34c38f', '#f5b400', '#4cc9f0', '#c77dff'];
+const PALETTE = ['#ffd84d', '#7be0ad', '#c3a6ff', '#8fd3ff', '#ff9478', '#ffc9a8'];
 
 function hash(text: string): number {
   let h = 0;

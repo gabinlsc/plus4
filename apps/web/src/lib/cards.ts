@@ -15,10 +15,10 @@ export const COLOR_VAR: Record<CardColor, string> = {
 };
 
 export const COLOR_HEX: Record<CardColor, string> = {
-  red: '#e5484d',
-  yellow: '#f5b400',
-  green: '#2fa36b',
-  blue: '#2f6fed',
+  red: '#ff4f4f',
+  yellow: '#ffc83d',
+  green: '#22b573',
+  blue: '#3d7bff',
 };
 
 const VALUE_LABEL: Record<Exclude<CardValue, number>, string> = {

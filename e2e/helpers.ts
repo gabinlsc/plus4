@@ -42,3 +42,11 @@ export async function seatCardCount(page: Page, seatName: string): Promise<numbe
 export async function waitForGame(page: Page): Promise<void> {
   await expect(hand(page).first()).toBeVisible();
 }
+
+/** Keeps only the first `count` bots of the default solo table (3 bots). */
+export async function keepBots(page: Page, count: number): Promise<void> {
+  for (let i = 3; i > count; i--) {
+    await page.getByRole('button', { name: `Retirer le bot ${i}` }).click();
+  }
+  await expect(page.getByRole('button', { name: /^Bot \d : / })).toHaveCount(count);
+}

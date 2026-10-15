@@ -4,49 +4,65 @@
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
-  min-height: 52px;
+  min-height: 56px;
 }
 
 .status {
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: var(--bd);
+  background: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 600;
   color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
 }
 
 .yourTurn {
-  color: var(--text);
+  color: var(--ink);
+  background: var(--mint);
+  rotate: -1deg;
 }
 
 .uno {
-  border: 0;
+  border: var(--bd-lg);
   border-radius: 999px;
-  padding: 12px 24px;
-  font-weight: 900;
-  font-style: italic;
-  font-size: 20px;
+  padding: 10px 24px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
   letter-spacing: 0.04em;
-  color: #15171f;
-  background: linear-gradient(180deg, #ffd34d, #f5b400);
-  box-shadow:
-    inset 0 -3px 0 rgba(0, 0, 0, 0.15),
-    0 10px 28px rgba(245, 180, 0, 0.5);
+  color: var(--ink);
+  background: var(--coral);
+  box-shadow: var(--shadow);
   cursor: pointer;
+  transition: box-shadow 0.15s ease-out;
+}
+
+.uno:hover:not(:disabled) {
+  box-shadow: var(--shadow-sm);
 }
 
 .uno:disabled {
-  filter: grayscale(1);
-  opacity: 0.35;
-  cursor: not-allowed;
+  background: #e9e6d8;
+  color: #8a8a8a;
+  border-color: #8a8a8a;
   box-shadow: none;
+  cursor: not-allowed;
 }
 
 .jump {
-  border: 0;
+  border: var(--bd-lg);
   border-radius: 999px;
   padding: 12px 22px;
-  font-weight: 900;
-  color: #15171f;
-  background: linear-gradient(180deg, #fff, #ffd34d);
-  box-shadow: 0 0 30px rgba(255, 211, 77, 0.8);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--ink);
+  background: var(--banana);
+  box-shadow: var(--shadow-lg);
   cursor: pointer;
 }
 
@@ -56,29 +72,30 @@
 
 .emoteMenu {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 10px);
   right: 0;
   display: flex;
   gap: 4px;
   padding: 6px;
-  border-radius: 14px;
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-panel);
+  border-radius: 16px;
+  background: var(--paper);
+  border: var(--bd);
+  box-shadow: var(--shadow);
   z-index: 30;
 }
 
 .emoteButton {
-  border: 0;
+  border: 2px solid transparent;
   background: transparent;
   font-size: 22px;
-  padding: 6px 8px;
+  padding: 4px 8px;
   border-radius: 10px;
   cursor: pointer;
 }
 
 .emoteButton:hover {
-  background: var(--surface-strong);
+  background: var(--banana);
+  border-color: var(--ink);
 }
 
 .timer {
@@ -86,5 +103,5 @@
 }
 
 .timerLow {
-  color: var(--danger);
+  color: #c62828;
 }

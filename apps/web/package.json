@@ -10,6 +10,8 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@fontsource/fredoka": "5.2.8",
+    "@fontsource/space-grotesk": "5.2.10",
     "@uno/shared": "workspace:*",
     "framer-motion": "^14.1.0",
     "react": "^19.3.0",

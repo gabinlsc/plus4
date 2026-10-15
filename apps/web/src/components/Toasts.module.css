@@ -15,30 +15,28 @@
 .toast {
   pointer-events: auto;
   padding: 10px 16px;
-  border-radius: 12px;
-  font-weight: 600;
+  border-radius: 14px;
+  font-weight: 700;
   font-size: 14px;
-  background: rgba(18, 26, 51, 0.92);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-panel);
-  backdrop-filter: blur(10px);
+  background: var(--paper);
+  color: var(--ink);
+  border: var(--bd);
+  box-shadow: var(--shadow);
   cursor: pointer;
 }
 
 .error {
-  border-color: rgba(255, 77, 94, 0.6);
-  color: #ffd1d6;
+  background: var(--coral);
 }
 
 .success {
-  border-color: rgba(52, 195, 143, 0.6);
+  background: var(--mint);
 }
 
 .alert {
-  background: linear-gradient(180deg, #ffd34d, #f5b400);
-  color: #15171f;
-  font-weight: 800;
-  border-color: transparent;
+  background: var(--banana);
+  font-family: var(--font-display);
+  font-size: 16px;
 }
 
 .banner {
@@ -49,8 +47,9 @@
   z-index: 100;
   padding: 10px 18px;
   border-radius: 999px;
-  background: rgba(255, 77, 94, 0.9);
-  color: #fff;
+  background: var(--coral);
+  color: var(--ink);
+  border: var(--bd);
+  box-shadow: var(--shadow);
   font-weight: 700;
-  box-shadow: var(--shadow-panel);
 }

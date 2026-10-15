@@ -32,8 +32,8 @@ export function TimerRing({ deadline, total }: { deadline: number | null; total:
         cy={32}
         r={r}
         fill="none"
-        stroke={left <= 5 ? 'var(--danger)' : 'var(--accent)'}
-        strokeWidth={3}
+        stroke={left <= 5 ? 'var(--danger)' : 'var(--ink)'}
+        strokeWidth={4}
         strokeDasharray={c}
         strokeDashoffset={c * (1 - ratio)}
         strokeLinecap="round"
@@ -57,7 +57,7 @@ export function OpponentSeat({
   const shown = Math.min(seat.handCount, MAX_FAN);
   return (
     <div
-      className={`${styles.seat} ${seat.connected || seat.isBot ? '' : styles.away}`}
+      className={`${styles.seat} ${isCurrent ? styles.current : ''} ${seat.connected || seat.isBot ? '' : styles.away}`}
       ref={anchors.ref(`seat:${seat.id}`)}
     >
       <AnimatePresence>

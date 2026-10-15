@@ -1,9 +1,9 @@
 .panel {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--border);
+  position: relative;
+  background: var(--paper);
+  border: var(--bd-lg);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-panel);
-  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-lg);
   padding: 24px;
 }
 
@@ -12,76 +12,89 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 20px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface-strong);
+  padding: 11px 18px;
+  border-radius: 14px;
+  border: var(--bd);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
   font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
+  box-shadow: var(--shadow);
   transition:
-    transform 0.12s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
+    transform 0.15s var(--spring),
+    box-shadow 0.15s ease-out;
 }
 
 .button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.16);
-  transform: translateY(-1px);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .button:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--ink);
 }
 
 .button:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: var(--shadow-sm);
 }
 
 .primary {
-  background: linear-gradient(180deg, #8d9bff, #6273f5);
-  border-color: transparent;
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(98, 115, 245, 0.35);
-}
-
-.primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #9ba8ff, #6f80ff);
+  background: var(--banana);
 }
 
 .danger {
-  background: linear-gradient(180deg, #ff6b78, #e5484d);
-  border-color: transparent;
-  color: #fff;
+  background: var(--coral);
 }
 
 .ghost {
-  background: transparent;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+}
+
+.ghost:hover:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
 }
 
 .input {
   width: 100%;
   padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--text);
+  border-radius: 14px;
+  border: var(--bd);
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
   outline: none;
-  transition: border-color 0.15s ease;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background 0.15s ease,
+    transform 0.15s var(--spring);
+}
+
+.input::placeholder {
+  color: #7a7a7a;
+  font-weight: 500;
 }
 
 .input:focus {
-  border-color: var(--accent);
+  background: #fffbe0;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
 }
 
 .label {
   display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
   margin-bottom: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
 }
 
 .muted {
@@ -92,34 +105,43 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
-  background: var(--surface-strong);
-  border: 1px solid var(--border);
+  font-weight: 700;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  white-space: nowrap;
 }
 
 .segmented {
   display: inline-flex;
   padding: 4px;
   gap: 4px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--paper);
+  border: var(--bd);
+  box-shadow: var(--shadow-sm);
 }
 
 .segment {
   padding: 8px 14px;
-  border-radius: 9px;
-  border: 0;
+  border-radius: 10px;
+  border: 2px solid transparent;
   background: transparent;
+  font-family: var(--font-display);
   font-weight: 600;
   cursor: pointer;
-  color: var(--text-muted);
+  color: var(--ink);
+  transition: background 0.15s ease;
 }
 
-.segmentActive {
-  background: var(--surface-strong);
-  color: var(--text);
+.segment:hover {
+  background: var(--bg);
+}
+
+.segmentActive,
+.segmentActive:hover {
+  background: var(--banana);
+  border-color: var(--ink);
 }
