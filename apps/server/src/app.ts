@@ -3,6 +3,7 @@ import type { AddressInfo } from 'node:net';
 import { Server } from 'socket.io';
 import { RoomManager } from './room/RoomManager';
 import type { RoomTimings } from './room/Room';
+import type { ResultSink } from './results';
 import { createStaticHandler } from './static';
 import { playerChannel, registerHandlers, roomChannel, type UnoServer } from './socket/handlers';
 
@@ -12,6 +13,8 @@ export interface UnoServerOptions {
   readonly timings?: Partial<RoomTimings>;
   /** Directory of the built web client to serve (production). */
   readonly staticDir?: string;
+  /** Receives every finished game (leaderboard of games.glsc.fr). */
+  readonly results?: ResultSink;
 }
 
 export interface UnoServerInstance {
@@ -39,6 +42,7 @@ export function createUnoServer(options: UnoServerOptions): UnoServerInstance {
     }),
     ...(options.random ? { random: options.random } : {}),
     ...(options.timings ? { timings: options.timings } : {}),
+    ...(options.results ? { results: options.results } : {}),
   });
 
   const serveStatic = options.staticDir ? createStaticHandler(options.staticDir) : null;

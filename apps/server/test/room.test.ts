@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SETTINGS, resolveSettings, type GameSettings, type RoomMode } from '@uno/shared';
+import type { GameRecord } from '../src/results';
 import { Room, type RoomHooks } from '../src/room/Room';
 import { FakeTransport, seededRandom } from './fakes';
 
@@ -229,6 +230,60 @@ describe('game', () => {
     }
     expect(room.gameState()?.phase.type).toBe('GAME_OVER');
     expect(transport.lastUpdate(host).events.map((e) => e.type)).toContain('GAME_ENDED');
+  });
+
+  describe('leaderboard record', () => {
+    const playToEnd = (room: Room) => {
+      for (let i = 0; i < 20_000 && room.gameState()?.phase.type !== 'GAME_OVER'; i++) {
+        vi.advanceTimersByTime(1000);
+      }
+      expect(room.gameState()?.phase.type).toBe('GAME_OVER');
+    };
+
+    it('reports a finished game once, ranked, with the human still at the table', () => {
+      const records: GameRecord[] = [];
+      const { room, host } = makeRoom({
+        mode: 'solo',
+        bots: ['easy', 'normal', 'hard'],
+        idleTimeoutMs: 10 ** 9,
+        // The connected human never acts: the turn timer plays for them.
+        settings: { turnTimeoutSec: 10, scoring: { mode: 'single_round' } },
+        hooks: { onGameFinished: (r) => records.push(r) },
+      });
+      room.start(host);
+      playToEnd(room);
+      vi.advanceTimersByTime(60_000);
+
+      expect(records).toHaveLength(1);
+      const record = records[0];
+      const state = room.gameState();
+      if (!record || state?.phase.type !== 'GAME_OVER') throw new Error('no record');
+      const winnerId = state.phase.winnerId;
+      expect(record).toMatchObject({ v: 1, game: 'uno', mode: 'solo' });
+      expect(record.players.map((p) => p.rank)).toEqual([1, 2, 3, 4]);
+      expect(record.players.filter((p) => p.won)).toHaveLength(1);
+      expect(record.players[0]).toMatchObject({
+        won: true,
+        name: state.players.find((p) => p.id === winnerId)?.name,
+      });
+      expect(record.players.filter((p) => !p.bot).map((p) => p.name)).toEqual(['Host']);
+    });
+
+    it('leaves out a human on autopilot, and skips games with no human left', () => {
+      const records: GameRecord[] = [];
+      const { room, host } = makeRoom({
+        mode: 'solo',
+        bots: ['easy', 'normal'],
+        idleTimeoutMs: 10 ** 9,
+        settings: { scoring: { mode: 'single_round' } },
+        hooks: { onGameFinished: (r) => records.push(r) },
+      });
+      room.start(host);
+      room.disconnect(host);
+      vi.advanceTimersByTime(5000);
+      playToEnd(room);
+      expect(records).toEqual([]);
+    });
   });
 
   it('turn timer: an idle human is played for when the deadline passes', () => {

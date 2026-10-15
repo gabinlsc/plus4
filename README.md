@@ -31,12 +31,13 @@ docker build -t uno .
 docker run -p 3001:3001 uno
 ```
 
-| Variable                   | Défaut                  | Rôle                                             |
-| -------------------------- | ----------------------- | ------------------------------------------------ |
-| `PORT`                     | `3001`                  | Port HTTP + Socket.IO                            |
-| `CORS_ORIGIN`              | `http://localhost:5173` | Origines autorisées (séparées par des virgules)  |
-| `STATIC_DIR`               | _(aucun)_               | Dossier du client compilé à servir               |
-| `VITE_SERVER_URL` (client) | _(même origine)_        | URL du serveur si le client est hébergé ailleurs |
+| Variable                   | Défaut                  | Rôle                                                                           |
+| -------------------------- | ----------------------- | ------------------------------------------------------------------------------ |
+| `PORT`                     | `3001`                  | Port HTTP + Socket.IO                                                          |
+| `CORS_ORIGIN`              | `http://localhost:5173` | Origines autorisées (séparées par des virgules)                                |
+| `STATIC_DIR`               | _(aucun)_               | Dossier du client compilé à servir                                             |
+| `RESULTS_FILE`             | _(aucun)_               | Fichier où ajouter chaque partie terminée (JSONL, classement de games.glsc.fr) |
+| `VITE_SERVER_URL` (client) | _(même origine)_        | URL du serveur si le client est hébergé ailleurs                               |
 
 ## Scripts
 
