@@ -64,6 +64,8 @@ export interface RoomOptions {
   readonly code: string;
   readonly mode: RoomMode;
   readonly hostName: string;
+  /** Profile id of the host, when signed in. */
+  readonly hostPid?: string;
   readonly settings: GameSettings;
   readonly bots?: readonly BotDifficulty[];
   readonly transport: RoomTransport;
@@ -76,6 +78,8 @@ export interface RoomOptions {
 interface Seat {
   readonly id: PlayerId;
   readonly name: string;
+  /** Profile id (games.glsc.fr/profil) of a signed-in human. */
+  readonly pid?: string;
   readonly isBot: boolean;
   readonly difficulty: BotDifficulty | null;
   connected: boolean;
@@ -132,7 +136,7 @@ export class Room {
     this.now = options.now ?? Date.now;
     this.timings = { ...DEFAULT_TIMINGS, ...options.timings };
 
-    const host = this.createHumanSeat(options.hostName);
+    const host = this.createHumanSeat(options.hostName, options.hostPid);
     this.hostId = host.id;
     for (const difficulty of options.bots ?? []) this.seats.push(this.createBotSeat(difficulty));
   }
@@ -183,11 +187,11 @@ export class Room {
   // ── Lobby ──────────────────────────────────────────────────────────────
 
   /** Creates the host seat on construction, then other humans via `join`. */
-  join(name: string): Result<PlayerId> {
+  join(name: string, pid?: string): Result<PlayerId> {
     if (this.mode === 'solo') return fail('ROOM_FULL');
     if (this.game) return fail('GAME_IN_PROGRESS');
     if (this.seats.length >= this.maxPlayers) return fail('ROOM_FULL');
-    const seat = this.createHumanSeat(name);
+    const seat = this.createHumanSeat(name, pid);
     this.broadcastLobby();
     return ok(seat.id);
   }
@@ -353,10 +357,11 @@ export class Room {
     return new Set(this.seats.map((s) => s.name));
   }
 
-  private createHumanSeat(name: string): Seat {
+  private createHumanSeat(name: string, pid?: string): Seat {
     const seat: Seat = {
       id: randomUUID(),
       name: uniqueName(name, this.takenNames()),
+      ...(pid ? { pid } : {}),
       isBot: false,
       difficulty: null,
       connected: false,
@@ -495,7 +500,14 @@ export class Room {
       const seat = this.seats.find((s) => s.id === p.id);
       if (!seat || (!seat.isBot && (seat.left || seat.autopilot))) return [];
       return [
-        { name: p.name, bot: seat.isBot, rank: i + 1, won: p.id === winnerId, score: p.score },
+        {
+          name: p.name,
+          ...(seat.pid ? { pid: seat.pid } : {}),
+          bot: seat.isBot,
+          rank: i + 1,
+          won: p.id === winnerId,
+          score: p.score,
+        },
       ];
     });
     if (!players.some((p) => !p.bot)) return;

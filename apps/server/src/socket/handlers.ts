@@ -14,6 +14,7 @@ import {
 import { z } from 'zod';
 import type { Room } from '../room/Room';
 import type { RoomManager } from '../room/RoomManager';
+import { guestsOnly, type Identify } from '../profiles';
 import { RateLimiter } from './rateLimiter';
 
 export interface SocketData {
@@ -30,7 +31,11 @@ type AnyAck = (result: AckResult<unknown>) => void;
 const tokenSchema = z.string().uuid();
 
 /** Wires every client event to the room manager. All payloads are validated here. */
-export function registerHandlers(io: UnoServer, manager: RoomManager): void {
+export function registerHandlers(
+  io: UnoServer,
+  manager: RoomManager,
+  identify: Identify = guestsOnly,
+): void {
   /** Live sockets per player: a player may briefly have two (reload, second tab). */
   const socketsByPlayer = new Map<PlayerId, Set<string>>();
 
@@ -44,19 +49,37 @@ export function registerHandlers(io: UnoServer, manager: RoomManager): void {
     /** Wraps a handler: rate limiting, ack guarding and crash isolation. */
     const on = <A extends unknown[]>(
       event: keyof ClientToServerEvents,
-      handler: (args: A, ack: unknown) => AckResult<unknown> | undefined,
+      handler: (
+        args: A,
+        ack: unknown,
+      ) => AckResult<unknown> | undefined | Promise<AckResult<unknown> | undefined>,
     ) => {
       socket.on(event, (...raw: unknown[]) => {
         const ack = typeof raw[raw.length - 1] === 'function' ? raw.pop() : undefined;
         if (!limiter.take()) return reply(ack, { ok: false, reason: 'RATE_LIMITED' });
-        try {
-          const result = handler(raw as A, ack);
-          if (result) reply(ack, result);
-        } catch (error) {
+        const failed = (error: unknown) => {
           console.error(`[socket] ${event} failed`, error);
           reply(ack, { ok: false, reason: 'INVALID_PAYLOAD' });
+        };
+        try {
+          const result = handler(raw as A, ack);
+          if (result instanceof Promise) {
+            result.then((value) => value && reply(ack, value), failed);
+          } else if (result) {
+            reply(ack, result);
+          }
+        } catch (error) {
+          failed(error);
         }
       });
+    };
+
+    /** Signed-in players play under their profile pseudo; guests cannot take a pseudo reserved by a profile. */
+    const who = async (typed: string) => {
+      const id = await identify(socket.handshake.headers.cookie, typed);
+      if (id.pid && id.name) return { ok: true as const, name: id.name, pid: id.pid };
+      if (!id.guestNameOk) return { ok: false as const, reason: 'NAME_RESERVED' as const };
+      return { ok: true as const, name: typed, pid: undefined };
     };
 
     const current = () => manager.resolve(socket.data.sessionToken);
@@ -96,20 +119,24 @@ export function registerHandlers(io: UnoServer, manager: RoomManager): void {
         return fn(ctx.room, ctx.playerId, ...args);
       };
 
-    on<[unknown]>('room:create', ([payload]) => {
+    on<[unknown]>('room:create', async ([payload]) => {
       const parsed = createRoomPayloadSchema.safeParse(payload);
       if (!parsed.success) return { ok: false, reason: 'INVALID_PAYLOAD' };
-      const session = manager.create(parsed.data);
+      const player = await who(parsed.data.playerName);
+      if (!player.ok) return player;
+      const session = manager.create({ ...parsed.data, playerName: player.name }, player.pid);
       const room = manager.getRoom(session.code);
       if (!room) return { ok: false, reason: 'ROOM_NOT_FOUND' };
       attach(room, session.playerId, session.sessionToken);
       return { ok: true, value: session };
     });
 
-    on<[unknown]>('room:join', ([payload]) => {
+    on<[unknown]>('room:join', async ([payload]) => {
       const parsed = joinRoomPayloadSchema.safeParse(payload);
       if (!parsed.success) return { ok: false, reason: 'INVALID_PAYLOAD' };
-      const joined = manager.join(parsed.data);
+      const player = await who(parsed.data.playerName);
+      if (!player.ok) return player;
+      const joined = manager.join({ ...parsed.data, playerName: player.name }, player.pid);
       if (!joined.ok) return joined;
       const room = manager.getRoom(joined.value.code);
       if (!room) return { ok: false, reason: 'ROOM_NOT_FOUND' };

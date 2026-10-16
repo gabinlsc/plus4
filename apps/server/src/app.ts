@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import { RoomManager } from './room/RoomManager';
 import type { RoomTimings } from './room/Room';
 import type { ResultSink } from './results';
+import type { Identify } from './profiles';
 import { createStaticHandler } from './static';
 import { playerChannel, registerHandlers, roomChannel, type UnoServer } from './socket/handlers';
 
@@ -15,6 +16,8 @@ export interface UnoServerOptions {
   readonly staticDir?: string;
   /** Receives every finished game (leaderboard of games.glsc.fr). */
   readonly results?: ResultSink;
+  /** Who is behind a connection (games.glsc.fr profiles). Default: everyone is a guest. */
+  readonly identify?: Identify;
 }
 
 export interface UnoServerInstance {
@@ -71,7 +74,7 @@ export function createUnoServer(options: UnoServerOptions): UnoServerInstance {
     cors: { origin: [...options.corsOrigins] },
     maxHttpBufferSize: 16 * 1024,
   });
-  registerHandlers(io, manager);
+  registerHandlers(io, manager, options.identify);
 
   return {
     httpServer,

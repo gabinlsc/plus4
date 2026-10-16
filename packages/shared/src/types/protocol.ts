@@ -166,7 +166,8 @@ export type LobbyError =
   | 'NOT_IN_ROOM'
   | 'INVALID_TARGET'
   | 'RATE_LIMITED'
-  | 'SESSION_EXPIRED';
+  | 'SESSION_EXPIRED'
+  | 'NAME_RESERVED';
 
 export type RoomClosedReason = 'kicked' | 'idle' | 'left';
 

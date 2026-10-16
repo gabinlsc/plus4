@@ -1,5 +1,6 @@
 import { createUnoServer } from './app';
 import { loadConfig } from './config';
+import { createIdentify } from './profiles';
 import { fileResultSink } from './results';
 
 const config = loadConfig();
@@ -7,6 +8,7 @@ const server = createUnoServer({
   corsOrigins: config.corsOrigins,
   ...(config.staticDir ? { staticDir: config.staticDir } : {}),
   ...(config.resultsFile ? { results: fileResultSink(config.resultsFile) } : {}),
+  identify: createIdentify(config.profilesUrl),
 });
 const port = await server.listen(config.port);
 console.log(

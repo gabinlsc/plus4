@@ -30,6 +30,8 @@ const MESSAGES: Record<ErrorReason, string> = {
   NOT_IN_ROOM: 'Tu n’es dans aucune room.',
   RATE_LIMITED: 'Doucement !',
   SESSION_EXPIRED: 'Ta session a expiré.',
+  NAME_RESERVED:
+    'Ce pseudo appartient à un profil : connecte-toi (Mon profil) ou choisis-en un autre.',
   TIMEOUT: 'Le serveur ne répond pas.',
   OFFLINE: 'Connexion perdue, reconnexion en cours…',
 };
