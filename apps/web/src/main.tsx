@@ -4,6 +4,7 @@ import { App } from './App';
 import { createGameClient } from './net/client';
 import { AppProvider } from './net/context';
 import { createSocket } from './net/socket';
+import { setupPwa } from './lib/pwa';
 import { createAppStore } from './store/store';
 import '@fontsource/fredoka/500.css';
 import '@fontsource/fredoka/600.css';
@@ -13,6 +14,7 @@ import '@fontsource/space-grotesk/500.css';
 import '@fontsource/space-grotesk/700.css';
 import './styles/global.css';
 
+setupPwa(import.meta.env.PROD);
 const store = createAppStore();
 const client = createGameClient(createSocket(), store);
 
