@@ -54,12 +54,13 @@ export class RoomManager {
     return { room, playerId: session.playerId };
   }
 
-  create(payload: CreateRoomInput): SessionInfo {
+  create(payload: CreateRoomInput, pid?: string): SessionInfo {
     const code = generateRoomCode((c) => this.rooms.has(c));
     const room: Room = new Room({
       code,
       mode: payload.mode,
       hostName: payload.playerName,
+      ...(pid ? { hostPid: pid } : {}),
       settings: resolveSettings(payload.settings ?? {}),
       bots: (payload.bots ?? []).map((b) => b.difficulty),
       transport: this.options.transportFor(code),
@@ -75,10 +76,10 @@ export class RoomManager {
     return this.issue(code, room.hostPlayerId);
   }
 
-  join(payload: JoinRoomPayload): AckResult<SessionInfo> {
+  join(payload: JoinRoomPayload, pid?: string): AckResult<SessionInfo> {
     const room = this.rooms.get(payload.code);
     if (!room) return { ok: false, reason: 'ROOM_NOT_FOUND' };
-    const joined = room.join(payload.playerName);
+    const joined = room.join(payload.playerName, pid);
     if (!joined.ok) return joined;
     return { ok: true, value: this.issue(room.code, joined.value) };
   }

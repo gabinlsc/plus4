@@ -11,6 +11,7 @@ function makeRoom(
     bots?: ('easy' | 'normal' | 'hard')[];
     settings?: Partial<GameSettings>;
     hooks?: RoomHooks;
+    hostPid?: string;
   } = {},
 ) {
   const transport = new FakeTransport();
@@ -18,6 +19,7 @@ function makeRoom(
     code: 'P4-TEST',
     mode: opts.mode ?? 'online',
     hostName: 'Host',
+    ...(opts.hostPid ? { hostPid: opts.hostPid } : {}),
     settings: resolveSettings(opts.settings ?? {}),
     bots: opts.bots ?? [],
     transport,
@@ -267,6 +269,25 @@ describe('game', () => {
         name: state.players.find((p) => p.id === winnerId)?.name,
       });
       expect(record.players.filter((p) => !p.bot).map((p) => p.name)).toEqual(['Host']);
+    });
+
+    it('records the profile id of signed-in humans, and only theirs', () => {
+      const records: GameRecord[] = [];
+      const { room, host } = makeRoom({
+        mode: 'solo',
+        bots: ['easy', 'normal', 'hard'],
+        idleTimeoutMs: 10 ** 9,
+        settings: { turnTimeoutSec: 10, scoring: { mode: 'single_round' } },
+        hooks: { onGameFinished: (r) => records.push(r) },
+        hostPid: '0123456789abcdef',
+      });
+      room.start(host);
+      playToEnd(room);
+      vi.advanceTimersByTime(60_000);
+      const players = records[0]?.players ?? [];
+      expect(players.filter((p) => p.pid)).toEqual([
+        expect.objectContaining({ name: 'Host', pid: '0123456789abcdef', bot: false }),
+      ]);
     });
 
     it('leaves out a human on autopilot, and skips games with no human left', () => {

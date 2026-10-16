@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   DEFAULT_SETTINGS,
@@ -14,6 +14,7 @@ import { BotPicker } from '../components/BotPicker';
 import { Card } from '../components/Card';
 import { Decor } from '../components/Decor';
 import { RulesPanel } from '../components/RulesPanel';
+import { fetchProfile, PROFILE_PAGE, type Profile } from '../lib/profile';
 import { useApp, useClient, useStoreApi } from '../net/context';
 import { setPrefs } from '../store/store';
 import ui from '../styles/ui.module.css';
@@ -36,6 +37,18 @@ export function Home() {
   const prefs = useApp((s) => s.prefs);
   const [mode, setMode] = useState<'solo' | 'online'>(initialRoomCode() ? 'online' : 'solo');
   const [name, setName] = useState(prefs.name);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    void fetchProfile().then((p) => {
+      if (cancelled || !p) return;
+      setProfile(p);
+      setName(p.name);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const [bots, setBots] = useState<BotDifficulty[]>(['normal', 'normal', 'normal']);
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
   const [code, setCode] = useState(initialRoomCode);
@@ -124,8 +137,20 @@ export function Home() {
                   maxLength={LIMITS.playerNameMaxLength}
                   placeholder="Ex : Gabin"
                   autoComplete="nickname"
+                  readOnly={profile !== null}
                   onChange={(e) => setName(e.target.value)}
                 />
+                <span className={ui.muted}>
+                  {profile ? (
+                    <>
+                      Profil connecté ✓ · <a href={PROFILE_PAGE}>Mon profil</a>
+                    </>
+                  ) : (
+                    <>
+                      Pseudo libre · <a href={PROFILE_PAGE}>Réserver mon pseudo</a>
+                    </>
+                  )}
+                </span>
               </label>
               <div className={`${ui.segmented} ${styles.modeTabs}`} role="tablist">
                 {(['solo', 'online'] as const).map((m) => (

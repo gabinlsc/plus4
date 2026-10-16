@@ -8,6 +8,8 @@ export interface ServerConfig {
   readonly staticDir: string | undefined;
   /** Finished games are appended here, one JSON object per line (optional). */
   readonly resultsFile: string | undefined;
+  /** Profiles service (internal address), e.g. http://profiles:3301. Absent: everyone plays as a guest. */
+  readonly profilesUrl: string | undefined;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
@@ -21,5 +23,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
     .filter(Boolean);
   const staticDir = env.STATIC_DIR ? resolve(env.STATIC_DIR) : undefined;
   const resultsFile = env.RESULTS_FILE ? resolve(env.RESULTS_FILE) : undefined;
-  return { port, corsOrigins, staticDir, resultsFile };
+  const profilesUrl = env.PROFILES_URL?.trim() || undefined;
+  return { port, corsOrigins, staticDir, resultsFile, profilesUrl };
 }

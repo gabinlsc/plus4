@@ -4,6 +4,8 @@ import type { RoomMode } from '@uno/shared';
 /** One player in a finished game, best rank first. Humans who left or ended on autopilot are not listed. */
 export interface ResultPlayer {
   readonly name: string;
+  /** Profile id of a signed-in human (the leaderboard groups results by profile). */
+  readonly pid?: string;
   readonly bot: boolean;
   /** 1 = winner, then by score, then by cards left in hand. */
   readonly rank: number;
