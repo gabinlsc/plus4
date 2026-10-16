@@ -13,6 +13,7 @@ import {
 import { BotPicker } from '../components/BotPicker';
 import { Card } from '../components/Card';
 import { Decor } from '../components/Decor';
+import { InstallButton } from '../components/InstallButton';
 import { RulesPanel } from '../components/RulesPanel';
 import { useApp, useClient, useStoreApi } from '../net/context';
 import { setPrefs } from '../store/store';
@@ -231,6 +232,7 @@ export function Home() {
             />
             Mode daltonien (symboles sur les cartes)
           </label>
+          <InstallButton />
           <span>
             Un jeu de <a href="https://glsc.fr">glsc.fr</a>
           </span>

@@ -24,4 +24,18 @@ export default tseslint.config(
       'react-hooks/exhaustive-deps': 'error',
     },
   },
+  {
+    // Service worker : JavaScript classique, exécuté dans un contexte « worker » (self, caches…).
+    files: ['apps/web/public/sw.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        self: 'readonly',
+        caches: 'readonly',
+        fetch: 'readonly',
+        URL: 'readonly',
+        Response: 'readonly',
+      },
+    },
+  },
 );
