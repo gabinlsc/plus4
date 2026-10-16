@@ -1,3 +1,4 @@
+import { ReportButton } from './components/ReportButton';
 import { ConnectionBanner, Toasts } from './components/Toasts';
 import { useApp } from './net/context';
 import { Game } from './screens/Game';
@@ -16,9 +17,11 @@ export function App() {
   else if (session && resuming) screen = null;
   else screen = <Home />;
 
+  const phase = session && lobby ? (lobby.inGame ? 'GAME' : 'LOBBY') : 'HOME';
   return (
     <>
       {screen}
+      <ReportButton game="plus4" context={{ room: session?.code, phase }} />
       <Toasts />
       <ConnectionBanner />
     </>
